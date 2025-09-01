@@ -1,4 +1,4 @@
-package com.webguru.trtest.data.model
+package com.webguru.trtest.data.network.model
 
 import retrofit2.HttpException
 import java.io.IOException

@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import com.webguru.trtest.data.TRTestTypeRepository
 import com.webguru.trtest.data.DefaultTRTestTypeRepository
+import com.webguru.trtest.data.PhotoRepository
+import com.webguru.trtest.data.PhotoRepositoryImpl
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,6 +38,12 @@ interface DataModule {
     fun bindsTRTestTypeRepository(
         tRTestTypeRepository: DefaultTRTestTypeRepository
     ): TRTestTypeRepository
+
+    @Singleton
+    @Binds
+    fun bindsPhotoRepository(
+        photoRepositoryImpl: PhotoRepositoryImpl
+    ): PhotoRepository
 }
 
 class FakeTRTestTypeRepository @Inject constructor() : TRTestTypeRepository {

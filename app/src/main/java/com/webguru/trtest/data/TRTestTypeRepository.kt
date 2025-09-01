@@ -16,10 +16,10 @@
 
 package com.webguru.trtest.data
 
+import com.webguru.trtest.data.local.dao.TRTestTypeDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import com.webguru.trtest.data.local.model.TRTestType
-import com.webguru.trtest.data.local.model.TRTestTypeDao
 import javax.inject.Inject
 
 interface TRTestTypeRepository {

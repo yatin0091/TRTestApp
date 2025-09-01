@@ -7,28 +7,29 @@ import com.webguru.trtest.data.model.Photo
 @JsonClass(generateAdapter = true)
 data class NetworkPhoto(
     val id: String,
-    @Json(name = "created_at")
-    val createdAt: String,
-    @Json(name = "updated_at")
-    val updatedAt: String,
-    val width: Long,
-    val height: Long,
-    val color: String,
     @Json(name = "blur_hash")
     val blurHash: String,
-    val likes: Long,
+    val color: String,
+    @Json(name = "created_at")
+    val createdAt: String,
+    val description: String?,
+    val height: Int,
     @Json(name = "liked_by_user")
     val likedByUser: Boolean,
-    val description: String,
+    val likes: Int,
+    @Json(name = "updated_at")
+    val updatedAt: String,
     val urls: Urls,
+    val width: Int
 )
 
-fun NetworkPhoto.toPhoto() = Photo(smallUrl = urls.small, bigImageUrl = urls.full)
-
+@JsonClass(generateAdapter = true)
 data class Urls(
-    val raw: String,
     val full: String,
+    val raw: String,
     val regular: String,
     val small: String,
-    val thumb: String,
+    val thumb: String
 )
+
+fun NetworkPhoto.toPhoto() = Photo(id = id, smallUrl = urls.small, bigImageUrl = urls.full)

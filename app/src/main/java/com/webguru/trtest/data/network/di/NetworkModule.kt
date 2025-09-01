@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Qualifier
-import jakarta.inject.Singleton
+import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -66,6 +66,8 @@ class NetworkModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
+    @Provides
+    @Singleton
     fun provideUnsplashApi(retrofit: Retrofit): UnsplashNetworkApi =
         retrofit.create(UnsplashNetworkApi::class.java)
 

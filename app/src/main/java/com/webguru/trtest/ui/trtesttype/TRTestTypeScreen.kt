@@ -27,23 +27,43 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun TRTestTypeScreen(modifier: Modifier = Modifier, viewModel: TRTestTypeViewModel = hiltViewModel()) {
+fun TRTestTypeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController = NavController(LocalContext.current),
+    viewModel: TRTestTypeViewModel = hiltViewModel()
+) {
     val items by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collectLatest { event ->
+            when (event) {
+                is NavigationEvent.NavigateToPhotos -> {
+                    navController.navigate("photos")
+                }
+            }
+        }
+    }
+
     if (items is TRTestTypeUiState.Success) {
         TRTestTypeScreen(
             items = (items as TRTestTypeUiState.Success).data,
             onSave = viewModel::addTRTestType,
+            onPhotosClick = viewModel::navigateToPhotos,
             modifier = modifier
         )
     }
@@ -53,6 +73,7 @@ fun TRTestTypeScreen(modifier: Modifier = Modifier, viewModel: TRTestTypeViewMod
 internal fun TRTestTypeScreen(
     items: List<String>,
     onSave: (name: String) -> Unit,
+    onPhotosClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
@@ -70,6 +91,9 @@ internal fun TRTestTypeScreen(
                 Text("Save")
             }
         }
+        Button(modifier = Modifier.width(96.dp), onClick = { onPhotosClick() }) {
+            Text("Photos")
+        }
         items.forEach {
             Text("Saved item: $it")
         }
@@ -82,7 +106,7 @@ internal fun TRTestTypeScreen(
 @Composable
 private fun DefaultPreview() {
     MyApplicationTheme {
-        TRTestTypeScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
+        TRTestTypeScreen(listOf("Compose", "Room", "Kotlin"), onSave = {}, onPhotosClick = {})
     }
 }
 
@@ -90,6 +114,6 @@ private fun DefaultPreview() {
 @Composable
 private fun PortraitPreview() {
     MyApplicationTheme {
-        TRTestTypeScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
+        TRTestTypeScreen(listOf("Compose", "Room", "Kotlin"), onSave = {}, onPhotosClick = {})
     }
 }

@@ -1,7 +1,7 @@
 package com.webguru.trtest.data.network.di
 
-import com.webguru.trtest.data.network.PhotoNetworkDataSource
-import com.webguru.trtest.data.network.PhotoNetworkDataSourceImpl
+import com.webguru.trtest.data.network.datasource.PhotoNetworkDataSource
+import com.webguru.trtest.data.network.datasource.PhotoNetworkDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

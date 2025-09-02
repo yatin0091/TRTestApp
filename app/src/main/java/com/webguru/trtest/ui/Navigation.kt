@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.webguru.trtest.ui.photolist.PhotosMainScreen
+import com.webguru.trtest.ui.photolist.PhotosRoute
 import com.webguru.trtest.ui.trtesttype.TRTestTypeScreen
 
 @Composable
@@ -32,6 +32,6 @@ fun MainNavigation() {
 
     NavHost(navController = navController, startDestination = "main") {
         composable("main") { TRTestTypeScreen(modifier = Modifier.padding(16.dp), navController = navController) }
-        composable("photos") { PhotosMainScreen(modifier = Modifier.padding(16.dp), navController = navController) }
+        composable("photos") { PhotosRoute(modifier = Modifier.padding(16.dp), navController = navController) }
     }
 }

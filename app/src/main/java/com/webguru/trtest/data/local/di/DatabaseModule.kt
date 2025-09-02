@@ -24,6 +24,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import com.webguru.trtest.data.local.AppDatabase
+import com.webguru.trtest.data.local.dao.PhotoDao
+import com.webguru.trtest.data.local.dao.PhotoRemoteKeyDao
 import com.webguru.trtest.data.local.dao.TRTestTypeDao
 import javax.inject.Singleton
 
@@ -37,12 +39,24 @@ class DatabaseModule {
     }
 
     @Provides
+    fun providePhotoDao(appDatabase: AppDatabase): PhotoDao {
+        return appDatabase.photoDao()
+    }
+
+    @Provides
+    fun providePhotoRemoteDao(appDatabase: AppDatabase): PhotoRemoteKeyDao {
+        return appDatabase.photoRemoteDao()
+    }
+
+
+    @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
         return Room.databaseBuilder(
-            appContext,
-            AppDatabase::class.java,
-            "TRTestType"
-        ).build()
+                appContext,
+                AppDatabase::class.java,
+                "TRTestType"
+            ).fallbackToDestructiveMigration(true)
+            .build()
     }
 }

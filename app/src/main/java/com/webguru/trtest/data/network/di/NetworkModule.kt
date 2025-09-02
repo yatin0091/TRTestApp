@@ -1,6 +1,11 @@
 package com.webguru.trtest.data.network.di
 
 import com.squareup.moshi.Moshi
+import com.webguru.trtest.data.local.AppDatabase
+import com.webguru.trtest.data.local.dao.PhotoDao
+import com.webguru.trtest.data.local.dao.PhotoRemoteKeyDao
+import com.webguru.trtest.data.network.datasource.PhotosPagingSource
+import com.webguru.trtest.data.network.datasource.PhotosRemoteMediator
 import com.webguru.trtest.data.network.retrofit.UnsplashNetworkApi
 import dagger.Module
 import dagger.Provides
@@ -70,5 +75,19 @@ class NetworkModule {
     @Singleton
     fun provideUnsplashApi(retrofit: Retrofit): UnsplashNetworkApi =
         retrofit.create(UnsplashNetworkApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providePhotoPagingSource(unsplashNetworkApi: UnsplashNetworkApi): PhotosPagingSource = PhotosPagingSource(unsplashNetworkApi)
+
+    @Provides
+    @Singleton
+    fun providePhotoRemoteMediatorPagingSource(
+        unsplashNetworkApi: UnsplashNetworkApi,
+        appDatabase: AppDatabase,
+        photoDao: PhotoDao,
+        keyDao: PhotoRemoteKeyDao
+    ): PhotosRemoteMediator =
+        PhotosRemoteMediator(unsplashNetworkApi, appDatabase, photoDao, keyDao)
 
 }

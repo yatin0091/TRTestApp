@@ -16,7 +16,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -32,8 +35,8 @@ class PhotosViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _refreshing = MutableStateFlow(false)
-    private val _appending  = MutableStateFlow(false)
-    private val _error      = MutableStateFlow<String?>(null)
+    private val _appending = MutableStateFlow(false)
+    private val _error = MutableStateFlow<String?>(null)
 
     // DB is SSOT → map Room flow to items and combine with transient flags
     val ui: StateFlow<UiState> =
@@ -59,7 +62,7 @@ class PhotosViewModel @Inject constructor(
         _appending.value = true
         viewModelScope.launch {
             try {
-                photoRepository.loadMore()                     // repo handles paging math + upsert
+                photoRepository.loadMore()// repo handles paging math + upsert
             } catch (e: Throwable) {
                 _error.value = e.message
             } finally {
@@ -75,7 +78,7 @@ class PhotosViewModel @Inject constructor(
         _refreshing.value = true
         viewModelScope.launch {
             try {
-                photoRepository.refresh()                      // repo clears+seeds DB in a transaction
+                photoRepository.refresh() // repo clears+seeds DB in a transaction
             } catch (e: Throwable) {
                 _error.value = e.message
             } finally {

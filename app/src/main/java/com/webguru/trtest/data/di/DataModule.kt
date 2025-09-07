@@ -26,6 +26,8 @@ import com.webguru.trtest.data.TRTestTypeRepository
 import com.webguru.trtest.data.DefaultTRTestTypeRepository
 import com.webguru.trtest.data.PhotoRepository
 import com.webguru.trtest.data.PhotoRepositoryImpl
+import com.webguru.trtest.data.SearchRepo
+import com.webguru.trtest.data.SearchRepoImpl
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,6 +46,12 @@ interface DataModule {
     fun bindsPhotoRepository(
         photoRepositoryImpl: PhotoRepositoryImpl
     ): PhotoRepository
+
+    @Singleton
+    @Binds
+    fun bindSearchRepo(
+        searchRepoImpl: SearchRepoImpl
+    ): SearchRepo
 }
 
 class FakeTRTestTypeRepository @Inject constructor() : TRTestTypeRepository {

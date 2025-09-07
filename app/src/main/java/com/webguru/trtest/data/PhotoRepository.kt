@@ -1,6 +1,7 @@
 package com.webguru.trtest.data
 
 import android.util.Log
+import androidx.lifecycle.ViewModel
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -19,12 +20,16 @@ import com.webguru.trtest.data.network.datasource.PhotosRemoteMediator
 import com.webguru.trtest.data.network.model.toPhoto
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -44,6 +49,7 @@ class PhotoRepositoryImpl @Inject constructor(
     private val db: AppDatabase,
     private val photoDao: PhotoDao
 ) : PhotoRepository {
+
     override fun getPhotos(): Flow<List<Photo>> = flow {
         photoNetworkDataSource.getPhotos(1, 10)
             .onSuccess { networkPhotos -> emit(networkPhotos.map { it.toPhoto() }) }
@@ -73,7 +79,9 @@ class PhotoRepositoryImpl @Inject constructor(
         photoDao.observeAll().onStart {
             // Seed DB only if empty; runs the first time the flow is collected.
             if (photoDao.count() == 0) {
-                try { refresh() } catch (_: Throwable) { }
+                try { refresh() } catch (e: Throwable) {
+                    Log.e("PhotoRepository", "Failed to refresh data on startup: ${e.message}")
+                }
             }
         }.map { photoEntities -> photoEntities.map { it.toPhoto() } }
 
